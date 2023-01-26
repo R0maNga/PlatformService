@@ -26,14 +26,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: mssql
-                key: SA_PASSWORD
-          volumeMounts:
-          - mountPath: /var/opt/mssql/data
-            name: mssqldb
-      volumes:
-      - name: mssqldb
-        persistentVolumeClaim:
-          claimName: mssql-claim
+                key: SA_PASSWORD        
 ---
 apiVersion: v1
 kind: Service
