@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using PlatformService.Additional;
+using PlatformService.AsyncDataServices;
 using PlatformService.Context;
 using PlatformService.Repositories;
 using PlatformService.SyncDataServices.Http;
@@ -52,7 +53,7 @@ namespace PlatformService
             services.AddScoped<IPlatformRepository, PlatformRepository>();
 
             services.AddHttpClient<ICommandDataClient, HttpCommandDataClient>();
-
+            services.AddSingleton<IMessageBusClient, MessageBusClient>();
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddSwaggerGen(c =>
