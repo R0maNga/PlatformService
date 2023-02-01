@@ -15,7 +15,6 @@ spec:
       containers:
         - name: rabbitmq
           image: rabbitmq:3-management
-          tag: 3.8.9
           ports:
             - containerPort: 15672
               name: rbmq-mgmt-port
