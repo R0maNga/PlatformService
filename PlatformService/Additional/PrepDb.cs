@@ -14,7 +14,7 @@ namespace PlatformService.Additional
         {
             using (var serviceScope = app.ApplicationServices.CreateScope())
             {
-                SeedData(serviceScope.ServiceProvider.GetService<AppDbContext>(), isProd);    
+                SeedData(serviceScope.ServiceProvider.GetService<AppDbContext>(), isProd);
             }
         }
 
@@ -32,17 +32,17 @@ namespace PlatformService.Additional
                     Console.WriteLine($"Migration failed:{e}");
                     throw;
                 }
-                
             }
+
             if (!context.Platforms.Any())
             {
                 Console.WriteLine("Seeding Data...");
 
                 context.Platforms.AddRange(
-                    new Platform() {Name ="Dot Net", Publisher = "Microsoft", Cost = "Free"},
-                new Platform() { Name = "SQL Server Express", Publisher = "Microsoft", Cost = "Free" },
-                new Platform() { Name = "Kubernetes", Publisher = "CNCF", Cost = "Free" }
-                    );
+                    new Platform { Name = "Dot Net", Publisher = "Microsoft", Cost = "Free" },
+                    new Platform { Name = "SQL Server Express", Publisher = "Microsoft", Cost = "Free" },
+                    new Platform { Name = "Kubernetes", Publisher = "CNCF", Cost = "Free" }
+                );
 
                 context.SaveChanges();
             }

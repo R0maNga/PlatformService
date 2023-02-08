@@ -1,8 +1,9 @@
-﻿using CommandsService.Models;
+﻿using System;
+using System.Collections.Generic;
+using CommandsService.Models;
 using CommandsService.SyncDataServices.Grpc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using System.Collections.Generic;
 
 namespace CommandsService.Data
 {
@@ -21,14 +22,11 @@ namespace CommandsService.Data
 
         private static void SeedData(ICommandRepository repository, IEnumerable<Platform> platforms)
         {
-            System.Console.WriteLine("Seeding new platforms");
+            Console.WriteLine("Seeding new platforms");
 
-            foreach(var plat in platforms)
+            foreach (var plat in platforms)
             {
-                if(!repository.ExternalPlatformExist(plat.ExternalId))
-                {
-                    repository.CreatePlatform(plat);
-                }
+                if (!repository.ExternalPlatformExist(plat.ExternalId)) repository.CreatePlatform(plat);
                 repository.SaveChanges();
             }
         }

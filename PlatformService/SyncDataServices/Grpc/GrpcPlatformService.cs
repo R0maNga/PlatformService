@@ -5,10 +5,10 @@ using PlatformService.Repositories;
 
 namespace PlatformService.SyncDataServices.Grpc
 {
-    public class GrpcPlatformService: GrpcPlatform.GrpcPlatformBase
+    public class GrpcPlatformService : GrpcPlatform.GrpcPlatformBase
     {
-        private readonly IPlatformRepository _repository;
         private readonly IMapper _mapper;
+        private readonly IPlatformRepository _repository;
 
         public GrpcPlatformService(IPlatformRepository repository, IMapper mapper)
         {
@@ -21,10 +21,7 @@ namespace PlatformService.SyncDataServices.Grpc
             var response = new PlatformResponse();
             var platforms = _repository.GetAllPlatforms();
 
-            foreach (var plat in platforms)
-            {
-                response.Platform.Add(_mapper.Map<GrpcPlatformModel>(plat));
-            }
+            foreach (var plat in platforms) response.Platform.Add(_mapper.Map<GrpcPlatformModel>(plat));
 
             return Task.FromResult(response);
         }

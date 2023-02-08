@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -14,14 +13,15 @@ namespace PlatformService.Controllers
 {
     [ApiController]
     [Route("api/platforms")]
-    public class PlatformController:ControllerBase
+    public class PlatformController : ControllerBase
     {
-        private readonly IMapper _mapper;
-        private readonly IPlatformRepository _repository;
         private readonly ICommandDataClient _commandDataClient;
+        private readonly IMapper _mapper;
         private readonly IMessageBusClient _messageBusClient;
+        private readonly IPlatformRepository _repository;
 
-        public PlatformController(IPlatformRepository repository, IMapper mapper, ICommandDataClient commandDataClient, IMessageBusClient messageBusClient)
+        public PlatformController(IPlatformRepository repository, IMapper mapper, ICommandDataClient commandDataClient,
+            IMessageBusClient messageBusClient)
         {
             _repository = repository;
             _mapper = mapper;
@@ -38,14 +38,11 @@ namespace PlatformService.Controllers
             return Ok(_mapper.Map<IEnumerable<PlatformReadDto>>(platformItems));
         }
 
-        [HttpGet("{id}", Name="GetPlatformById")]
+        [HttpGet("{id}", Name = "GetPlatformById")]
         public ActionResult<PlatformReadDto> GetPlatformById(int id)
         {
             var platformItem = _repository.GetPlatformById(id);
-            if (platformItem!=null)
-            {
-                return Ok(_mapper.Map<PlatformReadDto>(platformItem));
-            }
+            if (platformItem != null) return Ok(_mapper.Map<PlatformReadDto>(platformItem));
 
             return NotFound();
         }
@@ -66,7 +63,6 @@ namespace PlatformService.Controllers
             catch (Exception e)
             {
                 Console.WriteLine($" Could not send synchronously: {e.Message}");
-                
             }
 
             try
@@ -81,7 +77,7 @@ namespace PlatformService.Controllers
                 throw;
             }
 
-            return CreatedAtRoute(nameof(GetPlatformById), new {Id = platformReadDto.Id}, platformReadDto);
+            return CreatedAtRoute(nameof(GetPlatformById), new { platformReadDto.Id }, platformReadDto);
         }
     }
 }

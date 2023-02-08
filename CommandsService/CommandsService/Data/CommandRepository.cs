@@ -5,7 +5,7 @@ using CommandsService.Models;
 
 namespace CommandsService.Data
 {
-    public class CommandRepository:ICommandRepository
+    public class CommandRepository : ICommandRepository
     {
         private readonly AppDbContext _context;
 
@@ -13,9 +13,10 @@ namespace CommandsService.Data
         {
             _context = context;
         }
+
         public bool SaveChanges()
         {
-            return (_context.SaveChanges() >= 0);
+            return _context.SaveChanges() >= 0;
         }
 
         public IEnumerable<Platform> GetAllPlatforms()
@@ -25,10 +26,7 @@ namespace CommandsService.Data
 
         public void CreatePlatform(Platform platform)
         {
-            if (platform ==null)
-            {
-                throw new ArgumentNullException(nameof(platform));
-            }
+            if (platform == null) throw new ArgumentNullException(nameof(platform));
 
             _context.Platforms.Add(platform);
         }
@@ -57,12 +55,7 @@ namespace CommandsService.Data
 
         public void CreateCommand(int platformId, Command command)
         {
-            if (command==null)
-            {
-                throw new ArgumentNullException(nameof(command));
-
-                
-            }
+            if (command == null) throw new ArgumentNullException(nameof(command));
             command.PlatformId = platformId;
             _context.Commands.Add(command);
         }

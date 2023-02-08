@@ -5,7 +5,7 @@ using PlatformService;
 
 namespace CommandsService.Automapper
 {
-    public class CommandsProfile:Profile
+    public class CommandsProfile : Profile
     {
         public CommandsProfile()
         {
@@ -13,7 +13,7 @@ namespace CommandsService.Automapper
             CreateMap<CommandCreateDto, Command>();
             CreateMap<Command, CommandReadDto>();
             CreateMap<PlatformPublishedDto, Platform>()
-                .ForMember(dest=> dest.ExternalId, opt => opt.MapFrom(src=> src.Id));
+                .ForMember(dest => dest.ExternalId, opt => opt.MapFrom(src => src.Id));
             CreateMap<GrpcPlatformModel, Platform>()
                 .ForMember(dest => dest.ExternalId, opt => opt.MapFrom(src => src.PlatformId))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))

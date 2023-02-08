@@ -2,36 +2,32 @@
 using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
-
 using PlatformService.Dtos;
 using RabbitMQ.Client;
 
 namespace PlatformService.AsyncDataServices
 {
-    public class MessageBusClient:IMessageBusClient
+    public class MessageBusClient : IMessageBusClient
     {
+        private readonly IModel _channel;
         private readonly IConfiguration _configuration;
         private readonly IConnection _connection;
-        private readonly IModel _channel;
-        TimeSpan interval = new TimeSpan(0, 0, 60);
+        private TimeSpan interval = new(0, 0, 60);
 
         public MessageBusClient(IConfiguration configuration)
         {
             _configuration = configuration;
-            var factory = new ConnectionFactory()
+            var factory = new ConnectionFactory
             {
                 HostName = _configuration["RabbitMQHost"],
-                Port = int.Parse(_configuration["RabbitMQPort"]),
-                
-                
-
+                Port = int.Parse(_configuration["RabbitMQPort"])
             };
-            
+
             try
             {
                 _connection = factory.CreateConnection();
                 _channel = _connection.CreateModel();
-                _channel.ExchangeDeclare(exchange:"trigger", type: ExchangeType.Fanout);
+                _channel.ExchangeDeclare("trigger", ExchangeType.Fanout);
                 _connection.ConnectionShutdown += RabbitMQ_ConnectionShutdown;
                 Console.WriteLine("Connected to MessageBus");
             }
@@ -41,6 +37,7 @@ namespace PlatformService.AsyncDataServices
                 throw;
             }
         }
+
         public void PublishNewPlatform(PlatformPublishedDto platformPublishedDto)
         {
             var message = JsonSerializer.Serialize(platformPublishedDto);
@@ -60,10 +57,10 @@ namespace PlatformService.AsyncDataServices
         {
             var body = Encoding.UTF8.GetBytes(message);
 
-            _channel.BasicPublish(exchange: "trigger", 
-                routingKey:"", 
-                basicProperties:null, 
-                body:body);
+            _channel.BasicPublish("trigger",
+                "",
+                null,
+                body);
             Console.WriteLine($"sent {message}");
         }
 
@@ -76,6 +73,7 @@ namespace PlatformService.AsyncDataServices
                 _connection.Close();
             }
         }
+
         private void RabbitMQ_ConnectionShutdown(object sender, ShutdownEventArgs e)
         {
             Console.WriteLine("RabbitMQ connection Shutdown");
