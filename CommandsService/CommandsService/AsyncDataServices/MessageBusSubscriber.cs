@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,12 +10,12 @@ using RabbitMQ.Client.Events;
 
 namespace CommandsService.AsyncDataServices
 {
-    public class MessageBusSubscriber:BackgroundService
+    public class MessageBusSubscriber : BackgroundService
     {
         private readonly IConfiguration _configuration;
         private readonly IEventProcessor _eventProcessor;
-        private IConnection _connection;
         private IModel _channel;
+        private IConnection _connection;
         private string _queueName;
 
         public MessageBusSubscriber(IConfiguration configuration, IEventProcessor eventProcessor)
@@ -28,16 +27,16 @@ namespace CommandsService.AsyncDataServices
 
         private void InitialieRabbitMQ()
         {
-            var factory = new ConnectionFactory()
+            var factory = new ConnectionFactory
                 { HostName = _configuration["RabbitMQHost"], Port = int.Parse(_configuration["RabbitMQPort"]) };
 
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
-            _channel.ExchangeDeclare(exchange:"trigger", type: ExchangeType.Fanout);
+            _channel.ExchangeDeclare("trigger", ExchangeType.Fanout);
             _queueName = _channel.QueueDeclare().QueueName;
-            _channel.QueueBind(queue: _queueName,
-                exchange: "trigger",
-                routingKey:"");
+            _channel.QueueBind(_queueName,
+                "trigger",
+                "");
             Console.WriteLine("Listening Message Bus");
             _connection.ConnectionShutdown += RabbitMQ_ConnectionShutdown;
         }
@@ -55,6 +54,7 @@ namespace CommandsService.AsyncDataServices
                 _connection.Close();
             }
         }
+
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             stoppingToken.ThrowIfCancellationRequested();
@@ -71,7 +71,7 @@ namespace CommandsService.AsyncDataServices
                 _eventProcessor.ProcessEvent(notificationMessage);
             };
 
-            _channel.BasicConsume(queue: _queueName, autoAck: true, consumer: consumer);
+            _channel.BasicConsume(_queueName, true, consumer);
 
             return Task.CompletedTask;
         }

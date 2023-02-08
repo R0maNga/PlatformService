@@ -8,16 +8,17 @@ using PlatformService.Dtos;
 
 namespace PlatformService.SyncDataServices.Http
 {
-    public class HttpCommandDataClient: ICommandDataClient
+    public class HttpCommandDataClient : ICommandDataClient
     {
-        private readonly HttpClient _httpClient;
         private readonly IConfiguration _configuration;
+        private readonly HttpClient _httpClient;
 
         public HttpCommandDataClient(HttpClient httpClient, IConfiguration configuration)
         {
             _httpClient = httpClient;
             _configuration = configuration;
         }
+
         public async Task SendPlatformToCommand(PlatformReadDto platform)
         {
             var httpCOntent = new StringContent(
@@ -28,14 +29,9 @@ namespace PlatformService.SyncDataServices.Http
             var response = await _httpClient.PostAsync($"{_configuration["CommandService"]}", httpCOntent);
 
             if (response.IsSuccessStatusCode)
-            {
                 Console.WriteLine("Sync POST to CS was OK");
-
-            }
             else
-            {
                 Console.WriteLine("Sync POST to CS was NOT OK");
-            }
         }
     }
 }

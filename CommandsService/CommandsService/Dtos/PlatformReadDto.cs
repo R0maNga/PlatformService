@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace CommandsService.Dtos
+﻿namespace CommandsService.Dtos
 {
     public class PlatformReadDto
     {

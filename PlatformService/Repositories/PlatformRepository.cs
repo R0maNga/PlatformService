@@ -6,9 +6,10 @@ using PlatformService.Models;
 
 namespace PlatformService.Repositories
 {
-    public class PlatformRepository:IPlatformRepository
+    public class PlatformRepository : IPlatformRepository
     {
         private readonly AppDbContext _context;
+
         public PlatformRepository(AppDbContext context)
         {
             _context = context;
@@ -16,7 +17,7 @@ namespace PlatformService.Repositories
 
         public bool SaveChanges()
         {
-            return (_context.SaveChanges() >= 0);
+            return _context.SaveChanges() >= 0;
         }
 
         public IEnumerable<Platform> GetAllPlatforms()
@@ -31,10 +32,7 @@ namespace PlatformService.Repositories
 
         public void CreatePlatform(Platform platform)
         {
-            if (platform == null)
-            {
-                throw new ArgumentNullException(nameof(platform));
-            }
+            if (platform == null) throw new ArgumentNullException(nameof(platform));
 
             _context.Platforms.Add(platform);
         }

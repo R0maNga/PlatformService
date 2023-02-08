@@ -4,7 +4,7 @@ using PlatformService.Models;
 
 namespace PlatformService.AutoMapper
 {
-    public class PlatformProfile:Profile
+    public class PlatformProfile : Profile
     {
         public PlatformProfile()
         {
